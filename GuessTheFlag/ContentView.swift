@@ -29,6 +29,7 @@ struct ContentView: View {
     @State private var showingScore = false
     @State private var scoreTitle = ""
     @State private var score = 0
+    @State private var scoreMessage = ""
     
     var body: some View {
         
@@ -72,7 +73,7 @@ struct ContentView: View {
         .alert(isPresented: $showingScore) {
             
             Alert(title: Text(scoreTitle),
-                  message: Text("Your score is \(score)"),
+                  message: Text(scoreMessage),
                   dismissButton: .default(Text("Continue")) {
                         self.askQuestion()
                 })
@@ -84,9 +85,11 @@ struct ContentView: View {
         if number == correctAnswer {
             scoreTitle = "Correct"
             score += 1
+            scoreMessage = "Your score is \(score)"
         } else {
             scoreTitle = "Wrong"
             score -= 1
+            scoreMessage = "That's the flag of \(countries[number])"
         }
         
         showingScore = true
