@@ -12,11 +12,23 @@ struct ContentView: View {
     
     var body: some View {
         
-        ZStack {
-            Color.red.edgesIgnoringSafeArea(.all)
-            Text("Your Content")
+        VStack {
+            
+            ZStack {
+                Color.red.edgesIgnoringSafeArea(.all)
+                Text("Your Content")
+            }
+            .background(Color.red)
+            
+            Button(action: {
+                print("Edit button was tapped")
+            }) {
+                HStack(spacing: 10) {
+                    Image(systemName: "pencil")
+                    Text("Edit")
+                }
+            }
         }
-        .background(Color.red)
     }
 }
 
