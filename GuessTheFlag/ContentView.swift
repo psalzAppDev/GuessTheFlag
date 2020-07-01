@@ -30,6 +30,8 @@ struct ContentView: View {
     @State private var scoreTitle = ""
     @State private var score = 0
     @State private var scoreMessage = ""
+    @State private var animateButtons = false
+    @State private var rotationAmount = 0.0
     
     var body: some View {
         
@@ -54,10 +56,44 @@ struct ContentView: View {
                 
                 ForEach(0 ..< 3) { number in
                     Button(action: {
+                        self.animateButtons = true
+                        if number == self.correctAnswer {
+                            withAnimation {
+                                self.rotationAmount += 360
+                            }
+                        }
                         self.flagTapped(number)
                     }) {
                         FlagImage(image: self.countries[number])
                     }
+                    .opacity({
+                        guard self.animateButtons else {
+                            return 1.0
+                        }
+                        
+                        return number == self.correctAnswer
+                            ? 1.0
+                            : 0.25
+                    }())
+                    .animation({
+                        guard self.animateButtons else {
+                            return nil
+                        }
+                        
+                        guard number != self.correctAnswer else {
+                            return nil
+                        }
+                        
+                        return .easeIn
+                    }())
+                    .rotation3DEffect(
+                        .degrees({
+                            number == self.correctAnswer
+                                ? self.rotationAmount
+                                : 0.0
+                        }()),
+                        axis: (x: 0, y: 1, z: 0)
+                    )
                 }
                 
                 Text("Score: \(score)")
@@ -95,6 +131,7 @@ struct ContentView: View {
         
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        animateButtons = false
     }
 }
 
